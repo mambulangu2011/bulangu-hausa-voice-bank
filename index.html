@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ha">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BULANGU V2 - Voice + Photo $1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f0f2ff}
+header{background:#0f2b8a;color:#fff;padding:12px;text-align:center;position:sticky;top:0;z-index:9}
+.tabs{display:flex;gap:6px;padding:8px;background:#fff;position:sticky;top:78px;z-index:8}
+.tabs button{flex:1;padding:14px;border:none;border-radius:10px;font-weight:900;background:#eef2ff;color:#0f2b8a}
+.tabs button.active{background:#0f2b8a;color:#fff}
+.card{background:#fff;margin:10px;padding:14px;border-radius:14px}
+.btn{width:100%;padding:15px;border:none;border-radius:12px;font-weight:900;margin:8px 0;font-size:15px}
+.b1{background:#0f2b8a;color:#fff}.b2{background:#16a34a;color:#fff}.b3{background:#2563eb;color:#fff}
+input,select,textarea{width:100%;padding:13px;margin:7px 0;border:2px solid #cbd5e1;border-radius:10px;font-size:15px}
+.item{border:1px solid #eee;background:#f9fafb;padding:8px;border-radius:10px;margin:8px 0}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+<header>
+<b>BULANGU MARKET V2</b><br><small>Voice $2 + Photo $1 - Don Google AI</small>
+<div style="display:flex;gap:6px;margin-top:8px">
+<div style="flex:1;background:#ffffff22;padding:6px;border-radius:8px">Voice <b id="vc">0</b></div>
+<div style="flex:1;background:#ffffff22;padding:6px;border-radius:8px">Photo <b id="pc">0</b></div>
+<div style="flex:1;background:#ffffff22;padding:6px;border-radius:8px">Value <b id="val">$0</b></div>
+</div>
+</header>
+
+<div class="tabs">
+<button id="t1" class="active" onclick="sh('v')">🎙️ Murya</button>
+<button id="t2" onclick="sh('p')">📸 HOTO</button>
+<button id="t3" onclick="sh('m')">💰 Siyarwa</button>
+</div>
+
+<div id="v" class="card">
+<b>🎙️ Ajiye Murya</b>
+<input id="vname" placeholder="Suna: Musa Bulangu">
+<textarea id="vtr" placeholder="Me ka fada"></textarea>
+<button class="btn" id="rb" style="background:#dc2626;color:#fff;padding:22px;font-size:18px">🎙️ RIQE DON RIKODI</button>
+<audio id="au" controls style="width:100%;display:none"></audio>
+<button class="btn b1" onclick="sv()">💾 AJIYE MURYA</button>
+<p id="vs" style="text-align:center;color:green;font-weight:800"></p>
+<div id="vlist"></div>
+</div>
+
+<div id="p" class="card" style="display:none">
+<div style="background:#dcfce7;border:3px dashed #16a34a;padding:12px;border-radius:12px;text-align:center">
+<h2 style="color:#16a34a;margin:4px">📸 WAJEN DAUKAR HOTO</h2>
+<p style="margin:4px;font-size:13px">Google AI & OpenAI suna biyan <b>$1 kowane hoto</b></p>
+</div>
+<select id="ptype">
+<option>Gona - Farm</option>
+<option>Gida - House</option>
+<option>Mutum - Person</option>
+<option>Dabba - Animal</option>
+<option>Kasuwa - Market</option>
+<option>Abinci - Food</option>
+</select>
+<textarea id="pdesc" rows="3" placeholder="Bayani: Gonar shinkafa a Bulangu, Jigawa, damina..."></textarea>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<button class="btn b2" onclick="document.getElementById('cam').click()" style="padding:20px">📸<br>DAUKI DA<br>CAMERA</button>
+<button class="btn b3" onclick="document.getElementById('gal').click()" style="padding:20px">🖼️<br>ZABA DAGA<br>GALLERY</button>
+</div>
+
+<input type="file" id="cam" accept="image/*" capture="environment" style="display:none">
+<input type="file" id="gal" accept="image/*" style="display:none">
+<img id="pprev" style="width:100%;display:none;border-radius:14px;max-height:350px;object-fit:cover;border:3px solid #16a34a;margin:8px 0">
+<p id="pinfo" style="text-align:center;color:#16a34a;font-weight:800"></p>
+<button class="btn" style="background:#16a34a;color:#fff;padding:18px" onclick="sp()">💾 AJIYE HOTON - $1</button>
+<p id="ps" style="text-align:center;color:green;font-weight:800"></p>
+<hr><b>Hotuna (<span id="pc2">0</span>)</b>
+<div id="plist" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+</div>
+
+<div id="m" class="card" style="display:none">
+<h3>💰 Siyarwa</h3>
+<div id="ms" style="background:#f3f4f6;padding:12px;border-radius:10px"></div>
+<button class="btn b3" onclick="zipP()">📦 Sauke HOTUNA ZIP</button>
+<button class="btn b1" onclick="zipV()">🎵 Sauke MURYA ZIP</button>
+</div>
+
+<script>
+let V=[],P=[],cA=null,cD=0,cP=null,MR,AC=[],RS;
+function sh(id){
+document.getElementById('v').style.display='none';
+document.getElementById('p').style.display='none';
+document.getElementById('m').style.display='none';
+document.getElementById('t1').classList.remove('active');
+document.getElementById('t2').classList.remove('active');
+document.getElementById('t3').classList.remove('active');
+document.getElementById(id=='v'?'v':id=='p'?'p':'m').style.display='block';
+document.getElementById(id=='v'?'t1':id=='p'?'t2':'t3').classList.add('active');
+}
+async function db(){return new Promise(r=>{let o=indexedDB.open('BulanguV2',2);o.onupgradeneeded=e=>{let d=e.target.result;if(!d.objectStoreNames.contains('v'))d.createObjectStore('v',{keyPath:'id'});if(!d.objectStoreNames.contains('p'))d.createObjectStore('p',{keyPath:'id'});};o.onsuccess=()=>r(o.result);});}
+async function load(){let d=await db();let tx=d.transaction(['v','p'],'readonly');tx.objectStore('v').getAll().onsuccess=e=>{V=e.target.result;upd();};tx.objectStore('p').getAll().onsuccess=e=>{P=e.target.result;upd();};}
+function upd(){
+document.getElementById('vc').textContent=V.length;
+document.getElementById('pc').textContent=P.length;
+document.getElementById('pc2').textContent=P.length;
+document.getElementById('val').textContent='$'+(V.length*2+P.length);
+document.getElementById('ms').innerHTML='Murya:'+V.length+' x $2=$'+(V.length*2)+'<br>Hoto:'+P.length+' x $1=$'+P.length+'<br><b>Total:$'+(V.length*2+P.length)+'</b>';
+let vl=document.getElementById('vlist');vl.innerHTML='';[...V].reverse().slice(0,5).forEach(x=>{let u=URL.createObjectURL(x.b);vl.innerHTML+='<div class=item><b>'+x.n+'</b><br><audio controls src="'+u+'" style="width:100%"></audio></div>';});
+let pl=document.getElementById('plist');pl.innerHTML='';[...P].reverse().forEach(x=>{let u=URL.createObjectURL(x.b);pl.innerHTML+='<div class=item><img src="'+u+'" style="height:120px;object-fit:cover;width:100%;border-radius:8px"><small>'+x.t+'</small></div>';});
+}
+let rb=document.getElementById('rb');
+async function sr(e){e.preventDefault();try{let s=await navigator.mediaDevices.getUserMedia({audio:true});AC=[];MR=new MediaRecorder(s);MR.ondataavailable=ev=>AC.push(ev.data);MR.onstop=()=>{cA=new Blob(AC,{type:'audio/webm'});cD=Math.round((Date.now()-RS)/1000);let u=URL.createObjectURL(cA);let a=document.getElementById('au');a.src=u;a.style.display='block';rb.textContent='✅ Shiri! '+cD+'s';};RS=Date.now();MR.start();rb.textContent='🔴 Ana rikodi...';}catch(err){alert(err.message);}}
+function er(e){if(MR&&MR.state=='recording'){e.preventDefault();MR.stop();MR.stream.getTracks().forEach(t=>t.stop());}}
+rb.addEventListener('touchstart',sr,{passive:false});rb.addEventListener('touchend',er,{passive:false});rb.addEventListener('mousedown',sr);rb.addEventListener('mouseup',er);
+async function sv(){let n=document.getElementById('vname').value||'Anon';let tr=document.getElementById('vtr').value;if(!tr||!cA){alert('Yi rikodi + rubuta');return;}let o={id:Date.now(),n:n,tr:tr,b:cA,d:cD};let d=await db();d.transaction('v','readwrite').objectStore('v').put(o).oncomplete=()=>{document.getElementById('vs').textContent='✅ An ajiye!';cA=null;document.getElementById('vtr').value='';document.getElementById('au').style.display='none';load();};}
+function handlePhoto(f){if(!f)return;cP=f;let u=URL.createObjectURL(f);let i=document.getElementById('pprev');i.src=u;i.style.display='block';document.getElementById('pinfo').textContent='✅ Hoto ya shigo! '+(f.size/1024).toFixed(1)+'KB';}
+document.getElementById('cam').addEventListener('change',e=>handlePhoto(e.target.files[0]));
+document.getElementById('gal').addEventListener('change',e=>handlePhoto(e.target.files[0]));
+async function sp(){if(!cP){document.getElementById('ps').textContent='⚠️ Dauki hoto!';return;}let o={id:Date.now(),t:document.getElementById('ptype').value,desc:document.getElementById('pdesc').value,b:cP};let d=await db();d.transaction('p','readwrite').objectStore('p').put(o).oncomplete=()=>{document.getElementById('ps').textContent='✅ An ajiye hoto!';cP=null;document.getElementById('pprev').style.display='none';document.getElementById('pdesc').value='';load();};}
+function dB(b,n){let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download=n;a.click();}
+async function zipP(){if(!P.length){alert('Babu hoto');return;}let z=new JSZip();let f=z.folder('images');P.forEach(x=>f.file(x.t+'_'+x.id+'.jpg',x.b));let b=await z.generateAsync({type:'blob'});dB(b,'photos-'+Date.now()+'.zip');}
+async function zipV(){if(!V.length){alert('Babu murya');return;}let z=new JSZip();let f=z.folder('audios');V.forEach(x=>f.file(x.n+'_'+x.id+'.webm',x.b));let b=await z.generateAsync({type:'blob'});dB(b,'voice-'+Date.now()+'.zip');}
+load();
+</script>
+</body>
+</html>
