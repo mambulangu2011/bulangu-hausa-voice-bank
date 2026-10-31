@@ -1,111 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mam Bulangu Company - Hausa Voice Bank</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui;background:#0f172a;color:#e2e8f0;min-height:100vh}
-.login-screen{position:fixed;inset:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-box{background:#1e293b;padding:28px;border-radius:16px;width:100%;max-width:400px;border:1px solid #334155}
-.header{background:#1e293b;padding:14px 18px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
-.container{padding:16px;max-width:700px;margin:0 auto;padding-bottom:80px}
-.card{background:#1e293b;padding:18px;border-radius:14px;margin-bottom:14px;border:1px solid #334155}
-.input,select,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:14px;margin-bottom:10px;outline:none}
-.btn{padding:13px 18px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-weight:700;cursor:pointer}
-.btn-green{background:#10b981}
-.btn-red{background:#ef4444}
-.btn-gray{background:#475569}
-.hidden{display:none!important}
-.stat{padding:14px;text-align:center;background:#0f172a;border-radius:12px;border:1px solid #334155}
-.badge{background:#10b981;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700}
-.voice-item{background:#0f172a;padding:14px;border-radius:12px;margin-bottom:10px;border:1px solid #334155}
-.audio-player{width:100%;margin-top:8px}
-.tag{display:inline-block;background:#334155;padding:3px 8px;border-radius:6px;font-size:11px;margin-right:5px}
-.flex{display:flex;gap:8px;align-items:center}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.rec-btn{background:#ef4444;width:100px;height:100px;border-radius:50%;font-size:32px;border:4px solid #991b1b;margin:12px auto;display:block;cursor:pointer}
-.rec-btn.recording{background:#dc2626;animation:pulse 1s infinite}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
-.tabs{display:flex;gap:6px;margin-bottom:14px;background:#1e293b;padding:6px;border-radius:12px;border:1px solid #334155}
-.tab{flex:1;padding:10px;text-align:center;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#94a3b8}
-.tab.active{background:#3b82f6;color:#fff}
-</style>
-</head>
-<body>
-<div id="loginScreen" class="login-screen">
-<div class="login-box">
-<h1 style="text-align:center;font-size:24px">Mam Bulangu Company</h1>
-<p style="color:#94a3b8;margin:6px 0 4px;text-align:center;font-size:14px;font-weight:600">Hausa Voice Data Bank</p>
-<p style="color:#64748b;margin:0 0 20px;text-align:center;font-size:12px">Enterprise Edition 2027</p>
-<input id="passInput" type="password" class="input" placeholder="Enter Access Code">
-<button onclick="login()" class="btn" style="width:100%">Unlock System</button>
-<p id="loginError" style="color:#ef4444;margin-top:10px;text-align:center;font-size:13px"></p>
-<p style="margin-top:16px;font-size:10px;color:#475569;text-align:center">Default: Mam Bulangu 2027</p>
-</div>
-</div>
-<div id="mainApp" class="hidden">
-<div class="header">
-<div>
-<h2 style="font-size:17px">Mam Bulangu Company</h2>
-<p style="font-size:11px;color:#94a3b8">Hausa Voice Bank • Admin: mambulangu2011</p>
-</div>
-<span id="cloudStatus" class="badge">🟢 Online</span>
-</div>
-<div class="container">
-<div class="grid-3" style="margin-bottom:12px">
-<div class="stat"><b id="cloudCount" style="font-size:20px">0</b><br><span style="font-size:11px;color:#94a3b8">Cloud Stored</span></div>
-<div class="stat"><b id="localCount" style="font-size:20px">0</b><br><span style="font-size:11px;color:#94a3b8">Local Device</span></div>
-<div class="stat"><b id="totalCount" style="font-size:20px">0</b><br><span style="font-size:11px;color:#94a3b8">Total Voices</span></div>
-</div>
-<div class="card" style="border-color:#10b981">
-<h3 style="font-size:14px;margin-bottom:10px">👑 Admin Panel - Owner Control</h3>
-<div class="grid-2">
-<div><p style="font-size:11px;color:#94a3b8">Current Code:</p><b id="currentPassDisplay" style="font-size:13px;color:#10b981">Mam Bulangu 2027</b></div>
-<div style="text-align:right"><p style="font-size:11px;color:#94a3b8">Status: <span style="color:#10b981">Admin (You)</span></p></div>
-</div>
-<div style="display:flex;gap:8px;margin-top:12px">
-<input id="newPasswordInput" class="input" placeholder="Enter New Access Code" style="margin:0">
-<button onclick="changePassword()" class="btn btn-green" style="width:auto">Change</button>
-</div>
-<div style="display:flex;gap:6px;margin-top:10px">
-<button onclick="exportAll()" class="btn btn-gray" style="flex:1;font-size:12px">📤 Export CSV</button>
-<button onclick="clearAll()" class="btn btn-red" style="flex:1;font-size:12px">🗑️ Clear Local</button>
-<button onclick="logout()" class="btn btn-gray" style="flex:1;font-size:12px">🔒 Logout</button>
-</div>
-</div>
-<div class="tabs">
-<div class="tab active" onclick="switchTab('record')" id="tab-record">🎤 Record</div>
-<div class="tab" onclick="switchTab('list')" id="tab-list">📋 List</div>
-<div class="tab" onclick="switchTab('config')" id="tab-config">⚙️ Config</div>
-</div>
-<div id="tabContent-record">
-<div class="card">
-<h3 style="font-size:14px;margin-bottom:12px">🎤 Record New Hausa Voice</h3>
-<div class="grid-2">
-<input id="speakerName" class="input" placeholder="Speaker Full Name *">
-<input id="speakerPhone" class="input" placeholder="Phone (optional)">
-</div>
-<div class="grid-3">
-<select id="speakerGender" class="input"><option value="Male">Male</option><option value="Female">Female</option></select>
-<input id="speakerAge" class="input" placeholder="Age" type="number">
-<select id="speakerDialect" class="input"><option>Standard Hausa</option><option>Kananci</option><option>Sakkwatanci</option><option>Zazzaganci</option><option>Katsinanci</option><option>Bauchi</option><option>Other</option></select>
-</div>
-<div class="grid-2">
-<input id="speakerLocation" class="input" placeholder="Location (e.g. Bungudu)">
-<select id="voiceQuality" class="input"><option>Good</option><option>Excellent</option><option>Average</option><option>Noisy</option></select>
-</div>
-<textarea id="spokenText" class="input" placeholder="What was said? (Transcription) *" rows="3"></textarea>
-<button id="recBtn" class="rec-btn" onmousedown="startRec()" onmouseup="stopRec()" ontouchstart="startRec()" ontouchend="stopRec()">🎙️</button>
-<p style="text-align:center;color:#94a3b8;font-size:12px">Press and HOLD to Record</p>
-<p id="recStatus" style="text-align:center;margin-top:8px;font-size:13px;font-weight:600"></p>
-<p id="recTimer" style="text-align:center;font-size:20px;font-weight:800;color:#ef4444"></p>
-<div id="lastRecording" class="hidden" style="margin-top:12px;background:#0f172a;padding:12px;border-radius:10px">
-<p style="font-size:12px;color:#10b981;font-weight:700">✅ Last Recording Saved</p>
-<audio id="lastAudio" controls class="audio-player"></audio>
-</div>
-</div>
-</div>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Mam Bulangu Company - Hausa Voice Dataset for Sale</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui;background:#0f172a;color:#e2e8f0}.ls{position:fixed;inset:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}.lb{background:#1e293b;padding:26px;border-radius:16px;width:100%;max-width:420px;border:1px solid #334155}.hd{background:#1e293b;padding:12px 16px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}.ct{padding:14px;max-width:720px;margin:0 auto;padding-bottom:90px}.cd{background:#1e293b;padding:16px;border-radius:14px;margin-bottom:12px;border:1px solid #334155}.ip{width:100%;padding:11px;border-radius:9px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:13px;margin-bottom:7px}.bn{padding:11px 14px;border-radius:9px;border:none;background:#3b82f6;color:#fff;font-weight:700;cursor:pointer;font-size:13px}.g{background:#10b981}.r{background:#ef4444}.gy{background:#475569}.hi{display:none!important}.st{padding:10px;text-align:center;background:#0f172a;border-radius:9px;border:1px solid #334155}.bd{background:#10b981;padding:4px 10px;border-radius:20px;font-size:10px}.vi{background:#0f172a;padding:12px;border-radius:10px;margin-bottom:8px;border:1px solid #334155;display:flex;gap:10px}.tg{display:inline-block;background:#334155;padding:2px 6px;border-radius:4px;font-size:10px;margin-right:3px}.fl{display:flex;gap:6px}.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:5px}.rb{background:#ef4444;width:86px;height:86px;border-radius:50%;font-size:26px;border:3px solid #991b1b;margin:10px auto;display:block;cursor:pointer}.tb{display:flex;gap:4px;margin-bottom:10px;background:#1e293b;padding:4px;border-radius:9px;border:1px solid #334155}.t{flex:1;padding:8px;text-align:center;border-radius:6px;cursor:pointer;font-size:11px;font-weight:600;color:#94a3b8}.t.a{background:#3b82f6;color:#fff}.img-prev{width:70px;height:70px;border-radius:10px;object-fit:cover;border:2px solid #334155;background:#0f172a}.sale-badge{background:linear-gradient(135deg,#f59e0b,#ef4444);padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800;color:#fff}</style></head><body>
+<div id="ls" class="ls"><div class="lb"><h1 style="text-align:center;font-size:21px">Mam Bulangu Company</h1><p style="color:#fbbf24;text-align:center;font-size:12px;margin:4px 0;font-weight:700">HAUSA VOICE DATASET - FOR SALE</p><p style="color:#94a3b8;text-align:center;font-size:11px;margin-bottom:16px">Enterprise Data Bank for Google • OpenAI • Grants</p><input id="pw" type="password" class="ip" placeholder="Access Code"><button onclick="login()" class="bn" style="width:100%">Unlock System</button><p id="le" style="color:#ef4444;text-align:center;font-size:11px;margin-top:6px"></p><p style="text-align:center;font-size:9px;color:#475569;margin-top:10px">Default: Mam Bulangu 2027<br>Owner: mambulangu2011@github</p></div></div>
+<div id="app" class="hi"><div class="hd"><div><h2 style="font-size:15px">Mam Bulangu Company</h2><p style="font-size:10px;color:#fbbf24">Dataset Value: $ | For Google, OpenAI, Research Grants</p></div><span class="sale-badge">💰 FOR SALE</span></div><div class="ct">
+<div class="g3" style="margin-bottom:8px"><div class="st"><b id="cc">0</b><br><span style="font-size:10px;color:#94a3b8">Cloud</span></div><div class="st"><b id="lc">0</b><br><span style="font-size:10px;color:#94a3b8">Local</span></div><div class="st"><b id="tc">0</b><br><span style="font-size:10px;color:#94a3b8">Total • Value</span></div></div>
+<div class="cd" style="border-color:#f59e0b;background:linear-gradient(135deg,#1e293b,#422006)"><h3 style="font-size:12px;margin-bottom:6px">💰 Dataset Commercial Info</h3><div class="g3"><div><p style="font-size:9px;color:#94a3b8">Total Hours</p><b id="th" style="font-size:13px">0.0h</b></div><div><p style="font-size:9px;color:#94a3b8">Speakers</p><b id="ts" style="font-size:13px">0</b></div><div><p style="font-size:9px;color:#94a3b8">Est. Value</p><b style="font-size:13px;color:#fbbf24">$0</b></div></div><p style="font-size:9px;color:#fbbf24;margin-top:6px">High-quality Hausa dataset - Rare language - High demand for AI training</p></div>
+<div class="cd" style="border-color:#10b981"><h3 style="font-size:12px;margin-bottom:6px">👑 Admin - Owner Control</h3><div class="fl" style="justify-content:space-between"><div><p style="font-size:9px;color:#94a3b8">Access Code:</p><b id="cp" style="font-size:11px;color:#10b981">Mam Bulangu 2027</b></div><div><span style="font-size:9px;color:#10b981">Admin (You) • Sees all shared</span></div></div><div class="fl" style="margin-top:8px"><input id="np" class="ip" placeholder="New Code" style="margin:0"><button onclick="chPw()" class="bn g" style="width:auto;font-size:11px">Change</button></div><div class="fl" style="margin-top:6px"><button onclick="exSale()" class="bn" style="flex:1;font-size:10px;background:#f59e0b">📦 Export for Google/OpenAI (JSONL)</button><button onclick="exCsv()" class="bn gy" style="flex:1;font-size:10px">CSV</button></div><div class="fl" style="margin-top:4px"><button onclick="clr()" class="bn r" style="flex:1;font-size:10px">Clear Local</button><button onclick="logout()" class="bn gy" style="flex:1;font-size:10px">Logout</button></div></div>
+<div class="tb"><div class="t a" id="t-r" onclick="sw('r')">🎤 Record + 📸 Image</div><div class="t" id="t-l" onclick="sw('l')">📋 Dataset</div><div class="t" id="t-c" onclick="sw('c')">⚙️ Cloud</div></div>
+<div id="cr"><div class="cd"><h3 style="font-size:12px;margin-bottom:8px">🎤 + 📸 New Speaker Data (For Sale Quality)</h3>
+<p style="font-size:10px;color:#fbbf24;margin-bottom:8px">⚠️ Important for Google/OpenAI: Each voice needs PHOTO + CONSENT + TRANSCRIPTION</p>
+<div style="display:flex;gap:10px;margin-bottom:8px"><div><img id="imgPrev" class="img-prev" src="" style="display:none"><div id="imgPh" style="width:70px;height:70px;border-radius:10px;background:#0f172a;border:2px dashed #334155;display:flex;align-items:center;justify-content:center;font-size:24px">📸</div></div><div style="flex:1"><input type="file" id="imgIn" accept="image/*" class="ip" style="font-size:11px" onchange="loadImg(event)"><p style="font-size:9px;color:#94a3b8">Upload speaker photo (required for dataset value)</p><div style="display:flex;gap:4px;margin-top:4px"><button onclick="document.getElementById('imgIn').click()" class="bn gy" style="font-size:10px;padding:6px 10px">Choose Photo</button><button onclick="clearImg()" class="bn r" style="font-size:10px;padding:6px 10px">Clear</button></div></div></div>
+<div class="g2"><input id="sn" class="ip" placeholder="Full Name * (e.g. Musa Ibrahim)"><input id="sp" class="ip" placeholder="Phone (for verification)"></div><div class="g3"><select id="sg" class="ip"><option value="Male">Male</option><option value="Female">Female</option></select><input id="sa" class="ip" placeholder="Age *" type="number"><select id="sd" class="ip"><option>Standard Hausa</option><option>Kananci</option><option>Sakkwatanci</option><option>Zazzaganci</option><option>Katsinanci</option><option>Bauchi</option><option>Zamfaranci</option><option>Other</option></select></div><div class="g2"><input id="sl" class="ip" placeholder="Location * (Bungudu, Zamfara)"><select id="sq" class="ip"><option value="Excellent">Excellent - Studio</option><option value="Good" selected>Good - Clear</option><option value="Average">Average - Some noise</option><option value="Noisy">Noisy - Low quality</option></select></div><textarea id="st" class="ip" placeholder="Hausa Transcription * (What they said in Hausa) - EXACT words" rows="2"></textarea><textarea id="en" class="ip" placeholder="English Translation (for OpenAI/Google) - Translate Hausa to English" rows="2"></textarea><div class="fl" style="margin-bottom:6px"><input type="checkbox" id="cons" checked><label for="cons" style="font-size:11px;margin-left:4px">✅ I have consent from speaker to sell this voice data to AI companies (Google, OpenAI) and use for research grants. Speaker agreed.</label></div><button id="rb" class="rb" onmousedown="sR()" onmouseup="eR()" ontouchstart="sR()" ontouchend="eR()">🎙️</button><p style="text-align:center;color:#94a3b8;font-size:10px">Press & HOLD to Record Hausa Speech</p><p id="rs" style="text-align:center;margin-top:4px;font-size:11px;font-weight:700"></p><p id="rt" style="text-align:center;font-size:16px;font-weight:800;color:#ef4444"></p><div id="lr" class="hi" style="margin-top:8px;background:#0f172a;padding:8px;border-radius:8px;border:1px solid #334155"><p style="font-size:10px;color:#10b981">✅ Saved - Ready for Sale</p><div style="display:flex;gap:8px;margin-top:4px"><img id="lrImg" style="width:40px;height:40px;border-radius:6px;object-fit:cover"><audio id="la" controls style="flex:1;height:32px"></audio></div></div></div></div>
+<div id="cl" class="hi"><div class="cd"><div class="fl" style="justify-content:space-between;margin-bottom:8px"><h3 style="font-size:12px">📋 Dataset for Sale (<span id="lc2">0</span>)</h3><input id="sh" class="ip" placeholder="Search..." style="margin:0;width:50%" oninput="rv()"></div><div id="vl"></div></div></div>
+<div id="ccf" class="hi"><div class="cd"><h3 style="font-size:12px;margin-bottom:6px">☁️ Supabase Cloud Sync (Team Collection)</h3><p style="font-size:9px;color:#94a3b8;margin-bottom:6px">Share link to collectors - their voices come to you. Table 'voices' columns: id,name,age,gender,text,en_text,dialect,location,duration,image_url,consent,quality,created_at</p><input id="su" class="ip" placeholder="https://xyz.supabase.co"><input id="sk" class="ip" placeholder="Anon Key"><button onclick="svS()" class="bn" style="width:100%">Save & Connect</button><p id="ss" style="font-size:9px;margin-top:4px;color:#94a3b8"></p></div><div class="cd"><h3 style="font-size:11px">📊 Grant / Sale Package</h3><p style="font-size:10px;color:#94a3b8;margin-top:4px">This dataset is valuable because Hausa is low-resource language. Google, OpenAI pay $50-150 per hour of transcribed, consented data. With photos + consent + translation, value increases 3x.</p><p style="font-size:10px;color:#fbbf24;margin-top:6px">Export JSONL for OpenAI/Google, CSV for grants.</p></div></div>
+</div></div>
+<script>
+let AC=localStorage.getItem('mam_code')||'Mam Bulangu 2027',vs=JSON.parse(localStorage.getItem('mam_vs')||'[]'),sc=null,mr,ac=[],rst,ti,bl={},curImg=null,curImgData=null;
+document.getElementById('cp').innerText=AC;if(localStorage.getItem('mam_lg')==='1')show();
+function login(){let v=document.getElementById('pw').value.trim();if(v===AC){localStorage.setItem('mam_lg','1');show()}else{document.getElementById('le').innerText='Wrong! Current: '+AC}}
+function show(){document.getElementById('ls').classList.add('hi');document.getElementById('app').classList.remove('hi');loadS();up();rv();}
+function logout(){localStorage.removeItem('mam_lg');location.reload()}
+function chPw(){let n=document.getElementById('np').value.trim();if(!n)return alert('Enter new');AC=n;localStorage.setItem('mam_code',n);document.getElementById('cp').innerText=n;document.getElementById('np').value='';alert('Changed to: '+n)}
+function sw(t){document.querySelectorAll('.t').forEach(e=>e.classList.remove('a'));document.getElementById('t-'+t).classList.add('a');document.getElementById('cr').classList.add('hi');document.getElementById('cl').classList.add('hi');document.getElementById('ccf').classList.add('hi');if(t=='r')document.getElementById('cr').classList.remove('hi');if(t=='l'){document.getElementById('cl').classList.remove('hi');rv()}if(t=='c')document.getElementById('ccf').classList.remove('hi')}
+function loadImg(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=function(ev){curImgData=ev.target.result;document.getElementById('imgPrev').src=curImgData;document.getElementById('imgPrev').style.display='block';document.getElementById('imgPh').style.display='none'};r.readAsDataURL(f);curImg=f}
+function clearImg(){curImg=null;curImgData=null;document.getElementById('imgPrev').style.display='none';document.getElementById('imgPh').style.display='flex';document.getElementById('imgIn').value=''}
+function loadS(){let u=localStorage.getItem('su'),k=localStorage.getItem('sk');if(u&&k){document.getElementById('su').value=u;document.getElementById('sk').value=k;try{sc=supabase.createClient(u,k);fetchC()}catch(e){}}}
+function svS(){let u=document.getElementById('su').value.trim(),k=document.getElementById('sk').value.trim();if(!u||!k)return alert('Enter both');localStorage.setItem('su',u);localStorage.setItem('sk',k);loadS();alert('Saved!')}
+async function fetchC(){if(!sc)return;try{let {data}=await sc.from('voices').select('*');if(data){document.getElementById('cc').innerText=data.length;document.getElementById('ss').innerText='✅ Connected '+data.length;document.getElementById('cs').innerText='🟢 Online ('+data.length+')';up()}}catch(e){document.getElementById('ss').innerText='❌ '+e.message}}
+function up(){document.getElementById('lc').innerText=vs.length;document.getElementById('lc2').innerText=vs.length;let c=parseInt(document.getElementById('cc').innerText)||0;document.getElementById('tc').innerText=c+vs.length;let tot=0;vs.forEach(v=>tot+=v.du||0);let hrs=(tot/3600).toFixed(2);document.getElementById('th').innerText=hrs+'h';let uniq=new Set(vs.map(v=>v.n)).size;document.getElementById('ts').innerText=uniq}
+function rv(){let l=document.getElementById('vl'),q=(document.getElementById('sh')?.value||'').toLowerCase(),f=vs.filter(v=>(v.n||'').toLowerCase().includes(q)||(v.t||'').toLowerCase().includes(q));if(!f.length){l.innerHTML='<p style="color:#64748b;font-size:11px;text-align:center;padding:12px">No dataset yet. Record with photo.</p>';return}l.innerHTML=f.map(v=>{let i=vs.indexOf(v);let im=v.img||'';return `<div class="vi"><img src="${im}" style="width:50px;height:50px;border-radius:8px;object-fit:cover;background:#1e293b;border:1px solid #334155"><div style="flex:1"><b style="font-size:12px">${v.n||'?'} </b><span class="tg">${v.g||''}</span><span class="tg">${v.d||''}</span><span class="tg">${v.a||'?'}y</span> ${v.cons?'✅':''}<br><span style="font-size:11px;color:#cbd5e1">Hausa: ${v.t||''}</span><br><span style="font-size:10px;color:#94a3b8">EN: ${v.en||''}</span><br><span style="font-size:9px;color:#64748b">📍${v.l||'-'} • ${v.du||0}s • ${v.q||''} • ${new Date(v.dt).toLocaleDateString()}</span></div><div style="display:flex;flex-direction:column;gap:3px"><button onclick="pl(${i})" class="bn gy" style="padding:4px 8px;font-size:9px">▶️</button><button onclick="dl(${i})" class="bn r" style="padding:4px 8px;font-size:9px">Del</button></div></div>`}).join('')}
+async function sR(){let n=document.getElementById('sn').value.trim(),t=document.getElementById('st').value.trim(),en=document.getElementById('en').value.trim(),cons=document.getElementById('cons').checked;if(!n)return alert('Enter Name *');if(!t)return alert('Enter Hausa transcription *');if(!curImgData)return alert('📸 Photo required for dataset value! Please upload speaker photo.');if(!cons)return alert('Consent required for selling!');try{let s=await navigator.mediaDevices.getUserMedia({audio:true});mr=new MediaRecorder(s);ac=[];rst=Date.now();mr.ondataavailable=e=>{if(e.data.size>0)ac.push(e.data)};mr.onstop=async()=>{clearInterval(ti);let b=new Blob(ac,{type:'audio/webm'}),du=Math.round((Date.now()-rst)/1000),vc={id:Date.now(),n:n,ph:document.getElementById('sp').value,a:document.getElementById('sa').value,g:document.getElementById('sg').value,d:document.getElementById('sd').value,l:document.getElementById('sl').value,t:t,en:en,q:document.getElementById('sq').value,du:du,dt:new Date().toISOString(),cons:cons,img:curImgData};bl[vc.id]=b;vs.unshift(vc);localStorage.setItem('mam_vs',JSON.stringify(vs));if(sc){try{await sc.from('voices').insert([{id:vc.id,name:n,age:vc.a,gender:vc.g,text:t,en_text:en,dialect:vc.d,location:vc.l,duration:du,quality:vc.q,consent:cons,created_at:vc.dt}])}catch(e){}fetchC()}up();rv();document.getElementById('rs').innerText='✅ Saved '+du+'s - '+n+' - Ready for sale!';document.getElementById('rt').innerText='';document.getElementById('lr').classList.remove('hi');document.getElementById('la').src=URL.createObjectURL(b);if(curImgData)document.getElementById('lrImg').src=curImgData;s.getTracks().forEach(x=>x.stop())};mr.start();document.getElementById('rs').innerText='🔴 Recording...';ti=setInterval(()=>{document.getElementById('rt').innerText=Math.round((Date.now()-rst)/1000)+'s'},200)}catch(e){alert('Mic error: '+e.message)}}function eR(){if(mr&&mr.state=='recording')mr.stop()}
+function pl(i){let v=vs[i];if(bl[v.id]){let a=new Audio(URL.createObjectURL(bl[v.id]));a.play()}else alert('Audio in memory only. Text & photo saved.')}
+function dl(i){if(!confirm('Delete '+vs[i].n+'?'))return;delete bl[vs[i].id];vs.splice(i,1);localStorage.setItem('mam_vs',JSON.stringify(vs));up();rv()}
+function exCsv(){if(!vs.length)return alert('No data');let c='Name,Age,Gender,Dialect,Location,Hausa_Text,English_Translation,Duration,Quality,Consent,Date,Has_Image\n';vs.forEach(v=>{c+=`"${(v.n||'').replace(/"/g,'""')}","${v.a||''}","${v.g||''}","${v.d||''}","${v.l||''}","${(v.t||'').replace(/"/g,'""')}","${(v.en||'').replace(/"/g,'""')}","${v.du||0}","${v.q||''}","${v.cons||''}","${v.dt||''}","${v.img?'Yes':'No'}"\n`});let b=new Blob([c],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='MamBulangu_Dataset_'+new Date().toISOString().slice(0,10)+'.csv';a.click()}
+function exSale(){if(!vs.length)return alert('No data');let j='';vs.forEach(v=>{let o={id:v.id,speaker:{name:v.n,age:v.a,gender:v.g,dialect:v.d,location:v.l,photo_included:!!v.img},audio:{duration_seconds:v.du,quality:v.q},transcription:{hausa:v.t,english:v.en},consent:v.cons,created_at:v.dt,language:'ha',license:'commercial - consented for AI training'};j+=JSON.stringify(o)+'\n'});let b=new Blob([j],{type:'application/jsonl'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='MamBulangu_OPENAI_GOOGLE_'+new Date().toISOString().slice(0,10)+'.jsonl';a.click();alert('JSONL exported for Google/OpenAI! This is what they buy. Photos embedded as base64 in local storage.')}
+</script></body></html>
