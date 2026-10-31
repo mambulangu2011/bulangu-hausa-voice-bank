@@ -3,137 +3,109 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mam Bulangu Company</title>
+<title>Mam Bulangu Company - Hausa Voice Bank</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui;background:#0f172a;color:#fff;min-height:100vh}
+body{font-family:system-ui;background:#0f172a;color:#e2e8f0;min-height:100vh}
 .login-screen{position:fixed;inset:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
-.login-box{background:#1e293b;padding:28px;border-radius:16px;width:100%;max-width:380px;border:1px solid #334155}
-.header{background:#1e293b;padding:14px 18px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center}
-.container{padding:16px;max-width:620px;margin:0 auto}
-.card{background:#1e293b;padding:16px;border-radius:12px;margin-bottom:14px;border:1px solid #334155}
-.input{width:100%;padding:13px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:15px;margin-bottom:10px}
-.btn{width:100%;padding:13px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-weight:700;cursor:pointer}
+.login-box{background:#1e293b;padding:28px;border-radius:16px;width:100%;max-width:400px;border:1px solid #334155}
+.header{background:#1e293b;padding:14px 18px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:10}
+.container{padding:16px;max-width:700px;margin:0 auto;padding-bottom:80px}
+.card{background:#1e293b;padding:18px;border-radius:14px;margin-bottom:14px;border:1px solid #334155}
+.input,select,textarea{width:100%;padding:13px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:14px;margin-bottom:10px;outline:none}
+.btn{padding:13px 18px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-weight:700;cursor:pointer}
+.btn-green{background:#10b981}
+.btn-red{background:#ef4444}
+.btn-gray{background:#475569}
 .hidden{display:none!important}
-.stat{padding:12px;text-align:center;background:#0f172a;border-radius:10px;border:1px solid #334155}
-.badge{background:#10b981;padding:4px 10px;border-radius:20px;font-size:11px}
+.stat{padding:14px;text-align:center;background:#0f172a;border-radius:12px;border:1px solid #334155}
+.badge{background:#10b981;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.voice-item{background:#0f172a;padding:14px;border-radius:12px;margin-bottom:10px;border:1px solid #334155}
+.audio-player{width:100%;margin-top:8px}
+.tag{display:inline-block;background:#334155;padding:3px 8px;border-radius:6px;font-size:11px;margin-right:5px}
+.flex{display:flex;gap:8px;align-items:center}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rec-btn{background:#ef4444;width:100px;height:100px;border-radius:50%;font-size:32px;border:4px solid #991b1b;margin:12px auto;display:block;cursor:pointer}
+.rec-btn.recording{background:#dc2626;animation:pulse 1s infinite}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+.tabs{display:flex;gap:6px;margin-bottom:14px;background:#1e293b;padding:6px;border-radius:12px;border:1px solid #334155}
+.tab{flex:1;padding:10px;text-align:center;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:#94a3b8}
+.tab.active{background:#3b82f6;color:#fff}
 </style>
 </head>
 <body>
 <div id="loginScreen" class="login-screen">
 <div class="login-box">
-<h1 style="text-align:center;font-size:22px">Mam Bulangu Company</h1>
-<p style="color:#94a3b8;margin:8px 0 18px;text-align:center;font-size:13px">Enter Access Code to Continue</p>
-<input id="passInput" type="password" class="input" placeholder="Access Code">
-<button onclick="login()" class="btn">Unlock System</button>
+<h1 style="text-align:center;font-size:24px">Mam Bulangu Company</h1>
+<p style="color:#94a3b8;margin:6px 0 4px;text-align:center;font-size:14px;font-weight:600">Hausa Voice Data Bank</p>
+<p style="color:#64748b;margin:0 0 20px;text-align:center;font-size:12px">Enterprise Edition 2027</p>
+<input id="passInput" type="password" class="input" placeholder="Enter Access Code">
+<button onclick="login()" class="btn" style="width:100%">Unlock System</button>
 <p id="loginError" style="color:#ef4444;margin-top:10px;text-align:center;font-size:13px"></p>
-<p style="margin-top:18px;font-size:10px;color:#64748b;text-align:center">Default: Mam Bulangu 2027</p>
+<p style="margin-top:16px;font-size:10px;color:#475569;text-align:center">Default: Mam Bulangu 2027</p>
 </div>
 </div>
 <div id="mainApp" class="hidden">
 <div class="header">
-<h2 style="font-size:16px">Mam Bulangu Company</h2>
-<span id="cloudStatus" class="badge">🟢 Cloud Online</span>
+<div>
+<h2 style="font-size:17px">Mam Bulangu Company</h2>
+<p style="font-size:11px;color:#94a3b8">Hausa Voice Bank • Admin: mambulangu2011</p>
+</div>
+<span id="cloudStatus" class="badge">🟢 Online</span>
 </div>
 <div class="container">
-<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
-<div class="stat"><b id="cloudCount">0</b><br><span style="font-size:11px;color:#94a3b8">Cloud</span></div>
-<div class="stat"><b id="localCount">0</b><br><span style="font-size:11px;color:#94a3b8">Local</span></div>
-<div class="stat"><b id="totalCount">0</b><br><span style="font-size:11px;color:#94a3b8">Total</span></div>
+<div class="grid-3" style="margin-bottom:12px">
+<div class="stat"><b id="cloudCount" style="font-size:20px">0</b><br><span style="font-size:11px;color:#94a3b8">Cloud Stored</span></div>
+<div class="stat"><b id="localCount" style="font-size:20px">0</b><br><span style="font-size:11px;color:#94a3b8">Local Device</span></div>
+<div class="stat"><b id="totalCount" style="font-size:20px">0</b><br><span style="font-size:11px;color:#94a3b8">Total Voices</span></div>
 </div>
+<div class="card" style="border-color:#10b981">
+<h3 style="font-size:14px;margin-bottom:10px">👑 Admin Panel - Owner Control</h3>
+<div class="grid-2">
+<div><p style="font-size:11px;color:#94a3b8">Current Code:</p><b id="currentPassDisplay" style="font-size:13px;color:#10b981">Mam Bulangu 2027</b></div>
+<div style="text-align:right"><p style="font-size:11px;color:#94a3b8">Status: <span style="color:#10b981">Admin (You)</span></p></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:12px">
+<input id="newPasswordInput" class="input" placeholder="Enter New Access Code" style="margin:0">
+<button onclick="changePassword()" class="btn btn-green" style="width:auto">Change</button>
+</div>
+<div style="display:flex;gap:6px;margin-top:10px">
+<button onclick="exportAll()" class="btn btn-gray" style="flex:1;font-size:12px">📤 Export CSV</button>
+<button onclick="clearAll()" class="btn btn-red" style="flex:1;font-size:12px">🗑️ Clear Local</button>
+<button onclick="logout()" class="btn btn-gray" style="flex:1;font-size:12px">🔒 Logout</button>
+</div>
+</div>
+<div class="tabs">
+<div class="tab active" onclick="switchTab('record')" id="tab-record">🎤 Record</div>
+<div class="tab" onclick="switchTab('list')" id="tab-list">📋 List</div>
+<div class="tab" onclick="switchTab('config')" id="tab-config">⚙️ Config</div>
+</div>
+<div id="tabContent-record">
 <div class="card">
-<h3 style="font-size:14px;margin-bottom:8px">👑 Admin Panel</h3>
-<p style="font-size:11px;color:#94a3b8;margin-bottom:8px">Current Code: <b id="currentPassDisplay">Mam Bulangu 2027</b></p>
-<div style="display:flex;gap:8px">
-<input id="newPasswordInput" class="input" placeholder="New Access Code" style="margin:0">
-<button onclick="changePassword()" class="btn" style="width:auto;background:#10b981;padding:8px 14px;font-size:12px">Change</button>
+<h3 style="font-size:14px;margin-bottom:12px">🎤 Record New Hausa Voice</h3>
+<div class="grid-2">
+<input id="speakerName" class="input" placeholder="Speaker Full Name *">
+<input id="speakerPhone" class="input" placeholder="Phone (optional)">
 </div>
+<div class="grid-3">
+<select id="speakerGender" class="input"><option value="Male">Male</option><option value="Female">Female</option></select>
+<input id="speakerAge" class="input" placeholder="Age" type="number">
+<select id="speakerDialect" class="input"><option>Standard Hausa</option><option>Kananci</option><option>Sakkwatanci</option><option>Zazzaganci</option><option>Katsinanci</option><option>Bauchi</option><option>Other</option></select>
 </div>
-<div class="card">
-<h3 style="font-size:14px;margin-bottom:8px">Supabase Config</h3>
-<input id="supaUrl" class="input" placeholder="https://xyz.supabase.co">
-<input id="supaKey" class="input" placeholder="Supabase Anon Key">
-<button onclick="saveSupa()" class="btn" style="background:#475569">Save Config</button>
+<div class="grid-2">
+<input id="speakerLocation" class="input" placeholder="Location (e.g. Bungudu)">
+<select id="voiceQuality" class="input"><option>Good</option><option>Excellent</option><option>Average</option><option>Noisy</option></select>
 </div>
-<div class="card">
-<h3 style="font-size:14px;margin-bottom:8px">🎤 Record New Voice</h3>
-<input id="speakerName" class="input" placeholder="Speaker Name">
-<div style="display:flex;gap:8px">
-<select id="speakerGender" class="input" style="margin:0"><option>Male</option><option>Female</option></select>
-<input id="speakerAge" class="input" placeholder="Age" type="number" style="margin:0">
-</div>
-<input id="spokenText" class="input" placeholder="What did they say?">
-<button id="recBtn" class="btn" style="background:#ef4444;padding:18px;border-radius:50%;width:90px;height:90px;margin:12px auto;display:block;font-size:28px" onmousedown="startRec()" onmouseup="stopRec()" ontouchstart="startRec()" ontouchend="stopRec()">🎙️</button>
-<p style="text-align:center;color:#94a3b8;font-size:11px">Press and Hold to Record</p>
-<p id="recStatus" style="text-align:center;margin-top:6px;font-size:12px;color:#10b981"></p>
-</div>
-<div class="card">
-<h3 style="font-size:14px;margin-bottom:8px">📋 Voice List</h3>
-<div id="voiceList"></div>
+<textarea id="spokenText" class="input" placeholder="What was said? (Transcription) *" rows="3"></textarea>
+<button id="recBtn" class="rec-btn" onmousedown="startRec()" onmouseup="stopRec()" ontouchstart="startRec()" ontouchend="stopRec()">🎙️</button>
+<p style="text-align:center;color:#94a3b8;font-size:12px">Press and HOLD to Record</p>
+<p id="recStatus" style="text-align:center;margin-top:8px;font-size:13px;font-weight:600"></p>
+<p id="recTimer" style="text-align:center;font-size:20px;font-weight:800;color:#ef4444"></p>
+<div id="lastRecording" class="hidden" style="margin-top:12px;background:#0f172a;padding:12px;border-radius:10px">
+<p style="font-size:12px;color:#10b981;font-weight:700">✅ Last Recording Saved</p>
+<audio id="lastAudio" controls class="audio-player"></audio>
 </div>
 </div>
 </div>
-<script>
-let ACCESS_CODE=localStorage.getItem('mam_access_code')||'Mam Bulangu 2027';
-let voices=JSON.parse(localStorage.getItem('mam_voices')||'[]');
-let supaClient=null, mediaRecorder, audioChunks=[];
-document.getElementById('currentPassDisplay').innerText=ACCESS_CODE;
-if(localStorage.getItem('mam_logged_in')==='true') showApp();
-function login(){
-let v=document.getElementById('passInput').value.trim();
-if(v===ACCESS_CODE){localStorage.setItem('mam_logged_in','true');showApp();}
-else{document.getElementById('loginError').innerText='Wrong! Current is: '+ACCESS_CODE;}
-}
-function showApp(){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');loadSupa();updateCounts();renderVoices();}
-function changePassword(){
-let np=document.getElementById('newPasswordInput').value.trim();
-if(!np) return alert('Enter new code');
-ACCESS_CODE=np;localStorage.setItem('mam_access_code',np);
-document.getElementById('currentPassDisplay').innerText=np;
-document.getElementById('newPasswordInput').value='';
-alert('Changed to: '+np);
-}
-function loadSupa(){
-let url=localStorage.getItem('supa_url'), key=localStorage.getItem('supa_key');
-if(url&&key){
-document.getElementById('supaUrl').value=url;document.getElementById('supaKey').value=key;
-try{supaClient=supabase.createClient(url,key);fetchCloud();}catch(e){}
-}
-}
-function saveSupa(){
-let url=document.getElementById('supaUrl').value.trim(), key=document.getElementById('supaKey').value.trim();
-localStorage.setItem('supa_url',url);localStorage.setItem('supa_key',key);loadSupa();alert('Saved!');
-}
-async function fetchCloud(){
-if(!supaClient) return;
-try{let {data}=await supaClient.from('voices').select('*');if(data)document.getElementById('cloudCount').innerText=data.length;}catch(e){}
-}
-function updateCounts(){
-document.getElementById('localCount').innerText=voices.length;
-let c=parseInt(document.getElementById('cloudCount').innerText)||0;
-document.getElementById('totalCount').innerText=c+voices.length;
-}
-function renderVoices(){
-let list=document.getElementById('voiceList');
-if(!voices.length){list.innerHTML='<p style="color:#64748b;font-size:12px">No voices yet.</p>';return;}
-list.innerHTML=voices.map((v,i)=>'<div style="background:#0f172a;padding:10px;border-radius:8px;margin-bottom:6px;display:flex;justify-content:space-between"><div><b>'+(v.name||'No name')+'</b><br><span style="font-size:11px;color:#94a3b8">'+(v.text||'')+'</span></div><button onclick="deleteVoice('+i+')" style="background:#ef4444;border:none;color:white;padding:5px 9px;border-radius:6px">Del</button></div>').join('');
-}
-async function startRec(){
-let stream=await navigator.mediaDevices.getUserMedia({audio:true});
-mediaRecorder=new MediaRecorder(stream);audioChunks=[];
-mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
-mediaRecorder.onstop=async()=>{
-let blob=new Blob(audioChunks,{type:'audio/webm'});
-let voice={id:Date.now(),name:document.getElementById('speakerName').value||'No name',age:document.getElementById('speakerAge').value,gender:document.getElementById('speakerGender').value,text:document.getElementById('spokenText').value,duration:Math.round(blob.size/800),created_at:new Date().toISOString()};
-voices.unshift(voice);localStorage.setItem('mam_voices',JSON.stringify(voices));
-if(supaClient){try{await supaClient.from('voices').insert([voice]);fetchCloud();}catch(e){}}
-updateCounts();renderVoices();document.getElementById('recStatus').innerText='Saved! ✅';
-};
-mediaRecorder.start();document.getElementById('recStatus').innerText='🔴 Recording...';
-}
-function stopRec(){if(mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop();}
-function deleteVoice(i){voices.splice(i,1);localStorage.setItem('mam_voices',JSON.stringify(voices));updateCounts();renderVoices();}
-</script>
-</body>
-</html>
