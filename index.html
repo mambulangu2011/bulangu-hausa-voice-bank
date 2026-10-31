@@ -1,1 +1,139 @@
-<!DOCTYPE html><html lang="ha"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>BULANGU - Mam Bulangu</title><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.0/dist/umd/supabase.min.js"></script><style>*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#f0f4ff}header{background:#0f2b6a;color:#fff;padding:14px;text-align:center;position:sticky;top:0;z-index:20}.tabs{display:flex;gap:5px;padding:8px;background:#fff;position:sticky;top:68px;z-index:19}.tabs button{flex:1;padding:11px;border:none;border-radius:10px;font-weight:800;background:#eef2ff;color:#0f2b6a;font-size:13px}.tabs button.active{background:#0f2b6a;color:#fff}.card{background:#fff;margin:10px;padding:14px;border-radius:14px;box-shadow:0 2px 10px #0001}input,textarea,select{width:100%;padding:12px;border:2px solid #0f2b6a20;border-radius:10px;margin:5px 0;font-size:14px}.btn{width:100%;padding:13px;border:none;border-radius:10px;font-weight:900;margin:5px 0;color:#fff;font-size:14px;cursor:pointer}.btn-r{background:#e11}.btn-b{background:#0f2b6a}.btn-g{background:#16a34a}.btn-o{background:#2563eb}.m-item{background:#f3f6ff;border-radius:10px;padding:10px;margin:8px 0;display:flex;gap:8px;justify-content:space-between;align-items:center}.small{font-size:12px;color:#555}#preview{width:100%;display:none;border-radius:12px;max-height:300px;object-fit:cover;border:3px solid #16a34a;margin:8px 0}.badge{background:#0f2b6a;color:#fff;padding:2px 8px;border-radius:20px;font-size:11px}.grant-box{background:linear-gradient(135deg,#0f2b6a,#2563eb);color:#fff;padding:12px;border-radius:12px;margin:8px 0}footer{background:#0a1f4d;color:#fff;text-align:center;padding:18px;margin-top:20px;border-top:4px solid #ffcc00}footer b{color:#ffcc00}</style></head><body><header><b>BULANGU V3 - GRANTS READY</b><br><small id="cloudStatus">🔴 Local kawai</small><div style="display:flex;gap:6px;margin-top:8px"><div style="flex:1;background:#ffffff22;padding:6px;border-radius:8px">Local <b id="vc">0</b>/<b id="pc">0</b></div><div style="flex:1;background:#ffffff22;padding:6px;border-radius:8px">Cloud <b id="cloudC">0</b></div><div style="flex:1;background:#ffffff22;padding:6px;border-radius:8px">Total <b id="val">0</b></div></div></header><div class="tabs"><button id="t1" class="active" onclick="sh(1)">🎙️ Murya</button><button id="t2" onclick="sh(2)">📸 Hoto</button><button id="t3" onclick="sh(3)">💰 Sales</button><button id="t4" onclick="sh(4)">🔑 Admin</button></div><div id="v1" class="card"><div class="grant-box"><b>Don Grants!</b></div><input id="name" placeholder="Suna"><div style="display:flex;gap:6px"><select id="gender" style="flex:1"><option value="">Jinsi</option><option>Namiji</option><option>Mace</option></select><input id="age" type="number" placeholder="Shekaru" style="flex:1"></div><div style="display:flex;gap:6px"><select id="dialect" style="flex:1"><option value="">Yaren Hausa</option><option>Bulangu</option><option>Kano</option><option>Sakkwato</option><option>Zaria</option></select><input id="location" placeholder="Wuri" value="Bulangu, Jigawa" style="flex:1"></div><textarea id="txt" placeholder="Me ka fada..."></textarea><button class="btn btn-r" id="recBtn" onclick="toggleRec()">🎙️ RIQE DON RIKODI</button><div id="recInfo" class="small" style="text-align:center;font-weight:700"></div><audio id="aud" controls style="width:100%;display:none;margin:6px 0"></audio><div style="display:flex;gap:6px"><button class="btn btn-b" style="flex:1" onclick="saveVoice()">💾 AJIYE</button><button class="btn" style="flex:1;background:#666" onclick="clearRec()">🗑️ GOGE</button></div><hr><b>Muryoyina (<span id="vlistC">0</span>)</b><div id="vlist"></div></div><div id="v2" class="card" style="display:none"><select id="ptype"><option>Gona - Farm</option><option>Dabba - Animal</option><option>Mutum - Person</option><option>Gida - House</option><option>Kasuwanci - Market</option><option>Abinci - Food</option></select><textarea id="pdesc" rows="2" placeholder="Bayani don AI..."></textarea><div style="display:flex;gap:6px"><input id="pLocation" value="Bulangu, Jigawa" style="flex:1"><input id="pTime" value="Rana" style="flex:1"></div><div style="display:flex;gap:8px"><button class="btn btn-g" style="flex:1" onclick="document.getElementById('cam').click()">📸 CAMERA</button><button class="btn btn-o" style="flex:1" onclick="document.getElementById('gal').click()">🖼️ GALLERY</button></div><input type="file" id="cam" accept="image/*" capture="environment" style="display:none"><input type="file" id="gal" accept="image/*" style="display:none"><img id="preview"><div id="pinfo" class="small" style="text-align:center;color:green;font-weight:800"></div><div style="display:flex;gap:6px"><button class="btn btn-g" style="flex:1" onclick="savePhoto()">💾 AJIYE</button><button class="btn" style="flex:1;background:#666" onclick="clearPhoto()">🗑️ GOGE</button></div><hr><b>Hotuna (<span id="plistC">0</span>)</b><div id="plist" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div></div><div id="v3" class="card" style="display:none"><h3>💰 Shirye don Siyarwa</h3><div style="background:#f3f6ff;padding:10px;border-radius:10px;font-size:13px">Murya: <span id="sv">0</span> | Hoto: <span id="sp">0</span> | Cloud: <span id="cloudStat">0</span><br><b>Jimilla: <span id="stot">0</span></b></div><button class="btn btn-o" onclick="exportCSV()">📊 Sauke EXCEL (CSV)</button><button class="btn btn-o" onclick="zipPhotos()">📦 HOTUNA ZIP</button><button class="btn btn-b" onclick="zipVoices()">🎵 MURYA ZIP</button><button class="btn btn-g" onclick="zipAll()">📦 DUKA ZIP (Grants Ready)</button><button class="btn" style="background:#b00" onclick="clearAll()">🗑️ GOGE DUKA</button><div id="status" class="small" style="text-align:center;margin-top:8px;font-weight:700"></div></div><div id="v4" class="card" style="display:none"><h3>🔑 Admin</h3><input id="supaUrl" placeholder="https://xxxx.supabase.co"><input id="supaKey" placeholder="ANON KEY"><button class="btn btn-b" onclick="saveSupa()">💾 AJIYE SUPABASE</button><div style="display:flex;gap:6px;margin-top:8px"><input id="adminPass" type="password" placeholder="Password: bulangu2026"><button class="btn btn-o" style="flex:0 0 100px" onclick="loadCloud()">Shiga</button></div><div id="adminData" style="margin-top:10px"></div></div><footer><b>Founder: Mam Bulangu</b><br><small>Bulangu, Kafin Hausa, Jigawa State, Nigeria</small><br><small>Hausa Voice & Photo Bank for AI</small><br><small style="color:#ffcc00">© 2026 Bulangu AI Lab</small></footer><script>let voices=JSON.parse(localStorage.getItem('bv_voices')||'[]');let photos=JSON.parse(localStorage.getItem('bv_photos')||'[]');let supaUrl=localStorage.getItem('supaUrl')||'';let supaKey=localStorage.getItem('supaKey')||'';let supabaseClient=null;if(supaUrl&&supaKey){try{supabaseClient=supabase.createClient(supaUrl,supaKey);document.getElementById('cloudStatus').innerHTML='🟢 Cloud a kunne';}catch(e){}}document.getElementById('supaUrl').value=supaUrl;document.getElementById('supaKey').value=supaKey;let rec=null,chunks=[],isRec=false,timer=null,secs=0,curBlob=null,curAudioURL=null,curPhotoData=null,curPhotoFile=null;function sh(n){[1,2,3,4].forEach(i=>{document.getElementById('v'+i).style.display=i==n?'block':'none';document.getElementById('t'+i).className=i==n?'active':'';});}async function toggleRec(){let btn=document.getElementById('recBtn');if(!isRec){try{let stream=await navigator.mediaDevices.getUserMedia({audio:true});rec=new MediaRecorder(stream);chunks=[];secs=0;rec.ondataavailable=e=>{if(e.data.size>0)chunks.push(e.data)};rec.onstop=()=>{curBlob=new Blob(chunks,{type:'audio/webm'});if(curAudioURL)URL.revokeObjectURL(curAudioURL);curAudioURL=URL.createObjectURL(curBlob);let a=document.getElementById('aud');a.src=curAudioURL;a.style.display='block';a.load();document.getElementById('recInfo').innerHTML='✅ Shiri '+secs+'s';stream.getTracks().forEach(t=>t.stop());};rec.start();isRec=true;btn.innerHTML='⏸️ TSAYA '+secs+'s';btn.style.background='#000';timer=setInterval(()=>{secs++;btn.innerHTML='⏸️ TSAYA '+secs+'s';document.getElementById('recInfo').innerHTML='🔴 Ana rikodi '+secs+'s'},1000);}catch(e){alert('Mic error: '+e.message)}}else{rec.stop();isRec=false;clearInterval(timer);btn.innerHTML='✅ Shiri '+secs+'s';btn.style.background='#e11';}}function clearRec(){if(curAudioURL)URL.revokeObjectURL(curAudioURL);curBlob=null;curAudioURL=null;chunks=[];let a=document.getElementById('aud');a.pause();a.src='';a.style.display='none';document.getElementById('recInfo').innerHTML='';secs=0;document.getElementById('recBtn').innerHTML='🎙️ RIQE DON RIKODI';document.getElementById('recBtn').style.background='#e11';}async function blobToBase64(blob){return new Promise(r=>{let fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(blob)})}async function uploadToCloud(file,path){if(!supabaseClient)return null;let{data,error}=await supabaseClient.storage.from('bulangu-files').upload(path,file,{upsert:true});if(error){console.log(error);return null;}let{data:pub}=supabaseClient.storage.from('bulangu-files').getPublicUrl(path);return pub.publicUrl;}async function saveToCloudDB(record){if(!supabaseClient)return;let{error}=await supabaseClient.from('submissions').insert([record]);if(error)console.log('db err',error);else{document.getElementById('cloudStatus').innerHTML='🟢 An tura Cloud!';updateCloudCount();}}async function saveVoice(){if(!curBlob){alert('Yi rikodi da farko');return}let meta={name:document.getElementById('name').value||'Ba suna',gender:document.getElementById('gender').value,age:document.getElementById('age').value,dialect:document.getElementById('dialect').value||'Bulangu',location:document.getElementById('location').value||'Bulangu, Jigawa',text:document.getElementById('txt').value};let b64=await blobToBase64(curBlob);voices.push({id:Date.now(),...meta,b64:b64,dur:secs,date:new Date().toISOString()});localStorage.setItem('bv_voices',JSON.stringify(voices));if(supabaseClient){let fileName=`voices/voice_${Date.now()}_${meta.name}.webm`;let url=await uploadToCloud(curBlob,fileName);if(url){await saveToCloudDB({name:meta.name,gender:meta.gender,age:meta.age?parseInt(meta.age):null,dialect:meta.dialect,location:meta.location,type:'voice',text_content:meta.text,duration:secs,file_url:url});}}clearRec();document.getElementById('name').value='';document.getElementById('txt').value='';render();alert('✅ An ajiye!');}function renderVoices(){let c=document.getElementById('vlist');c.innerHTML='';voices.slice().reverse().forEach(v=>{let d=document.createElement('div');d.className='m-item';d.innerHTML=`<div style="flex:1"><b>${v.name}</b> <span class="badge">${v.dur}s</span><br><small>${(v.text||'').substring(0,50)} | ${v.location||''}</small><br><audio controls src="${v.b64}" style="width:100%;margin-top:4px"></audio></div><div><button onclick="delVoice(${v.id})" style="background:#e11;color:#fff;border:none;padding:8px 10px;border-radius:8px">🗑️</button></div>`;c.appendChild(d);});document.getElementById('vlistC').innerText=voices.length;}function delVoice(id){if(confirm('Goge?')){voices=voices.filter(x=>x.id!=id);localStorage.setItem('bv_voices',JSON.stringify(voices));render();}}document.getElementById('cam').addEventListener('change',handleFile);document.getElementById('gal').addEventListener('change',handleFile);function handleFile(e){let f=e.target.files[0];if(!f)return;curPhotoFile=f;let r=new FileReader();r.onload=()=>{curPhotoData=r.result;let img=document.getElementById('preview');img.src=curPhotoData;img.style.display='block';document.getElementById('pinfo').innerHTML='✅ '+(f.size/1024).toFixed(0)+'KB';};r.readAsDataURL(f);}function clearPhoto(){curPhotoData=null;curPhotoFile=null;document.getElementById('preview').style.display='none';document.getElementById('preview').src='';document.getElementById('pinfo').innerHTML='';document.getElementById('cam').value='';document.getElementById('gal').value='';}async function savePhoto(){if(!curPhotoData){alert('Dauki hoto');return}let meta={type:document.getElementById('ptype').value,desc:document.getElementById('pdesc').value,location:document.getElementById('pLocation').value,time:document.getElementById('pTime').value};photos.push({id:Date.now(),...meta,b64:curPhotoData,date:new Date().toISOString()});localStorage.setItem('bv_photos',JSON.stringify(photos));if(supabaseClient&&curPhotoFile){let fileName=`photos/photo_${Date.now()}.jpg`;let url=await uploadToCloud(curPhotoFile,fileName);if(url){await saveToCloudDB({name:'Photo',location:meta.location,type:'photo',text_content:meta.type+' | '+meta.desc,file_url:url});}}clearPhoto();document.getElementById('pdesc').value='';render();alert('✅ An ajiye hoto!');}function renderPhotos(){let c=document.getElementById('plist');c.innerHTML='';photos.slice().reverse().forEach(p=>{let d=document.createElement('div');d.style.cssText='background:#fff;border:2px solid #16a34a;border-radius:10px;overflow:hidden';d.innerHTML=`<img src="${p.b64}" style="width:100%;height:110px;object-fit:cover"><div style="padding:5px"><small><b>${p.type}</b><br>${(p.desc||'').substring(0,30)}</small><br><button onclick="delPhoto(${p.id})" style="background:#e11;color:#fff;border:none;padding:5px 8px;border-radius:6px;width:100%;margin-top:3px">🗑️</button></div>`;c.appendChild(d);});document.getElementById('plistC').innerText=photos.length;}function delPhoto(id){if(confirm('Goge?')){photos=photos.filter(x=>x.id!=id);localStorage.setItem('bv_photos',JSON.stringify(photos));render();}}function render(){renderVoices();renderPhotos();let vc=voices.length,pc=photos.length;document.getElementById('vc').innerText=vc;document.getElementById('pc').innerText=pc;document.getElementById('val').innerText=vc+pc;document.getElementById('sv').innerText=vc;document.getElementById('sp').innerText=pc;document.getElementById('stot').innerText=vc+pc;}function base64ToBlob(b64){let parts=b64.split(',');let mime=parts[0].match(/:(.*?);/)[1];let bstr=atob(parts[1]);let n=bstr.length;let u8=new Uint8Array(n);for(let i=0;i<n;i++)u8[i]=bstr.charCodeAt(i);return new Blob([u8],{type:mime});}async function zipVoices(){if(!voices.length){alert('Babu murya');return}let zip=new JSZip();let f=zip.folder('murya');voices.forEach((v,i)=>{f.file(`murya_${i+1}.webm`,base64ToBlob(v.b64));f.file(`murya_${i+1}_metadata.txt`,`Suna:${v.name}\nJinsi:${v.gender||''}\nShekaru:${v.age||''}\nYare:${v.dialect}\nWuri:${v.location}\nFada:${v.text}\nTsawon:${v.dur}s\nRana:${v.date}`);});let c=await zip.generateAsync({type:'blob'});downloadBlob(c,'BULANGU_MURYA_'+Date.now()+'.zip');}async function zipPhotos(){if(!photos.length){alert('Babu hoto');return}let zip=new JSZip();let f=zip.folder('hotuna');photos.forEach((p,i)=>{f.file(`hoto_${i+1}.jpg`,base64ToBlob(p.b64));f.file(`hoto_${i+1}_metadata.txt`,`Nau'i:${p.type}\nBayani:${p.desc}\nWuri:${p.location}\nRana:${p.date}`);});let c=await zip.generateAsync({type:'blob'});downloadBlob(c,'BULANGU_HOTUNA_'+Date.now()+'.zip');}async function zipAll(){if(!voices.length&&!photos.length){alert('Babu');return}let zip=new JSZip();if(voices.length){let f=zip.folder('murya');voices.forEach((v,i)=>{f.file(`murya_${i+1}.webm`,base64ToBlob(v.b64));});}if(photos.length){let f=zip.folder('hotuna');photos.forEach((p,i)=>{f.file(`hoto_${i+1}.jpg`,base64ToBlob(p.b64));});}zip.file('metadata.csv',generateCSVContent());let c=await zip.generateAsync({type:'blob'});downloadBlob(c,'BULANGU_GRANTS_PACKAGE_'+Date.now()+'.zip');document.getElementById('status').innerText='✅ Grants package ready!';}function downloadBlob(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1200);}function clearAll(){if(confirm('Goge LOCAL duka?')){voices=[];photos=[];localStorage.removeItem('bv_voices');localStorage.removeItem('bv_photos');render();}}function generateCSVContent(){let rows=[['id','type','name','gender','age','dialect','location','text','duration','date']];voices.forEach(v=>{rows.push([v.id,'voice',v.name,v.gender||'',v.age||'',v.dialect||'',v.location||'',(v.text||'').replace(/,/g,' '),v.dur,v.date]);});photos.forEach(p=>{rows.push([p.id,'photo','','','','',p.location||'',(p.type+' '+p.desc).replace(/,/g,' '),'',p.date]);});return rows.map(r=>r.map(x=>`"${x}"`).join(',')).join('\n');}function exportCSV(){let csv=generateCSVContent();let blob=new Blob([csv],{type:'text/csv'});downloadBlob(blob,'BULANGU_METADATA_'+Date.now()+'.csv');document.getElementById('status').innerText='✅ CSV ready!';}function saveSupa(){let u=document.getElementById('supaUrl').value.trim();let k=document.getElementById('supaKey').value.trim();if(!u||!k){alert('Saka URL da KEY');return}localStorage.setItem('supaUrl',u);localStorage.setItem('supaKey',k);location.reload();}async function updateCloudCount(){if(!supabaseClient)return;let{count}=await supabaseClient.from('submissions').select('*',{count:'exact',head:true});document.getElementById('cloudC').innerText=count||0;document.getElementById('cloudStat').innerText=count||0;}async function loadCloud(){if(document.getElementById('adminPass').value!=='bulangu2026'){alert('Password ba daidai ba');return}if(!supabaseClient){alert('Saka Supabase da farko');return}let{data,error}=await supabaseClient.from('submissions').select('*').order('created_at',{ascending:false}).limit(100);if(error){alert(error.message);return}let div=document.getElementById('adminData');div.innerHTML=`<b>Cloud: ${data.length}</b><br>`;data.forEach(d=>{let el=document.createElement('div');el.className='m-item';el.innerHTML=`<div><b>${d.name}</b> ${d.type} <small>${d.location||''}</small><br><small>${(d.text_content||'').substring(0,60)}</small><br><a href="${d.file_url}" target="_blank">Bude file</a></div>`;div.appendChild(el);});}render();updateCloudCount();</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mam Bulangu Company</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui;background:#0f172a;color:#fff;min-height:100vh}
+.login-screen{position:fixed;inset:0;background:#0f172a;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:#1e293b;padding:28px;border-radius:16px;width:100%;max-width:380px;border:1px solid #334155}
+.header{background:#1e293b;padding:14px 18px;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center}
+.container{padding:16px;max-width:620px;margin:0 auto}
+.card{background:#1e293b;padding:16px;border-radius:12px;margin-bottom:14px;border:1px solid #334155}
+.input{width:100%;padding:13px;border-radius:10px;border:1px solid #334155;background:#0f172a;color:#fff;font-size:15px;margin-bottom:10px}
+.btn{width:100%;padding:13px;border-radius:10px;border:none;background:#3b82f6;color:#fff;font-weight:700;cursor:pointer}
+.hidden{display:none!important}
+.stat{padding:12px;text-align:center;background:#0f172a;border-radius:10px;border:1px solid #334155}
+.badge{background:#10b981;padding:4px 10px;border-radius:20px;font-size:11px}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+<div class="login-box">
+<h1 style="text-align:center;font-size:22px">Mam Bulangu Company</h1>
+<p style="color:#94a3b8;margin:8px 0 18px;text-align:center;font-size:13px">Enter Access Code to Continue</p>
+<input id="passInput" type="password" class="input" placeholder="Access Code">
+<button onclick="login()" class="btn">Unlock System</button>
+<p id="loginError" style="color:#ef4444;margin-top:10px;text-align:center;font-size:13px"></p>
+<p style="margin-top:18px;font-size:10px;color:#64748b;text-align:center">Default: Mam Bulangu 2027</p>
+</div>
+</div>
+<div id="mainApp" class="hidden">
+<div class="header">
+<h2 style="font-size:16px">Mam Bulangu Company</h2>
+<span id="cloudStatus" class="badge">🟢 Cloud Online</span>
+</div>
+<div class="container">
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+<div class="stat"><b id="cloudCount">0</b><br><span style="font-size:11px;color:#94a3b8">Cloud</span></div>
+<div class="stat"><b id="localCount">0</b><br><span style="font-size:11px;color:#94a3b8">Local</span></div>
+<div class="stat"><b id="totalCount">0</b><br><span style="font-size:11px;color:#94a3b8">Total</span></div>
+</div>
+<div class="card">
+<h3 style="font-size:14px;margin-bottom:8px">👑 Admin Panel</h3>
+<p style="font-size:11px;color:#94a3b8;margin-bottom:8px">Current Code: <b id="currentPassDisplay">Mam Bulangu 2027</b></p>
+<div style="display:flex;gap:8px">
+<input id="newPasswordInput" class="input" placeholder="New Access Code" style="margin:0">
+<button onclick="changePassword()" class="btn" style="width:auto;background:#10b981;padding:8px 14px;font-size:12px">Change</button>
+</div>
+</div>
+<div class="card">
+<h3 style="font-size:14px;margin-bottom:8px">Supabase Config</h3>
+<input id="supaUrl" class="input" placeholder="https://xyz.supabase.co">
+<input id="supaKey" class="input" placeholder="Supabase Anon Key">
+<button onclick="saveSupa()" class="btn" style="background:#475569">Save Config</button>
+</div>
+<div class="card">
+<h3 style="font-size:14px;margin-bottom:8px">🎤 Record New Voice</h3>
+<input id="speakerName" class="input" placeholder="Speaker Name">
+<div style="display:flex;gap:8px">
+<select id="speakerGender" class="input" style="margin:0"><option>Male</option><option>Female</option></select>
+<input id="speakerAge" class="input" placeholder="Age" type="number" style="margin:0">
+</div>
+<input id="spokenText" class="input" placeholder="What did they say?">
+<button id="recBtn" class="btn" style="background:#ef4444;padding:18px;border-radius:50%;width:90px;height:90px;margin:12px auto;display:block;font-size:28px" onmousedown="startRec()" onmouseup="stopRec()" ontouchstart="startRec()" ontouchend="stopRec()">🎙️</button>
+<p style="text-align:center;color:#94a3b8;font-size:11px">Press and Hold to Record</p>
+<p id="recStatus" style="text-align:center;margin-top:6px;font-size:12px;color:#10b981"></p>
+</div>
+<div class="card">
+<h3 style="font-size:14px;margin-bottom:8px">📋 Voice List</h3>
+<div id="voiceList"></div>
+</div>
+</div>
+</div>
+<script>
+let ACCESS_CODE=localStorage.getItem('mam_access_code')||'Mam Bulangu 2027';
+let voices=JSON.parse(localStorage.getItem('mam_voices')||'[]');
+let supaClient=null, mediaRecorder, audioChunks=[];
+document.getElementById('currentPassDisplay').innerText=ACCESS_CODE;
+if(localStorage.getItem('mam_logged_in')==='true') showApp();
+function login(){
+let v=document.getElementById('passInput').value.trim();
+if(v===ACCESS_CODE){localStorage.setItem('mam_logged_in','true');showApp();}
+else{document.getElementById('loginError').innerText='Wrong! Current is: '+ACCESS_CODE;}
+}
+function showApp(){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('mainApp').classList.remove('hidden');loadSupa();updateCounts();renderVoices();}
+function changePassword(){
+let np=document.getElementById('newPasswordInput').value.trim();
+if(!np) return alert('Enter new code');
+ACCESS_CODE=np;localStorage.setItem('mam_access_code',np);
+document.getElementById('currentPassDisplay').innerText=np;
+document.getElementById('newPasswordInput').value='';
+alert('Changed to: '+np);
+}
+function loadSupa(){
+let url=localStorage.getItem('supa_url'), key=localStorage.getItem('supa_key');
+if(url&&key){
+document.getElementById('supaUrl').value=url;document.getElementById('supaKey').value=key;
+try{supaClient=supabase.createClient(url,key);fetchCloud();}catch(e){}
+}
+}
+function saveSupa(){
+let url=document.getElementById('supaUrl').value.trim(), key=document.getElementById('supaKey').value.trim();
+localStorage.setItem('supa_url',url);localStorage.setItem('supa_key',key);loadSupa();alert('Saved!');
+}
+async function fetchCloud(){
+if(!supaClient) return;
+try{let {data}=await supaClient.from('voices').select('*');if(data)document.getElementById('cloudCount').innerText=data.length;}catch(e){}
+}
+function updateCounts(){
+document.getElementById('localCount').innerText=voices.length;
+let c=parseInt(document.getElementById('cloudCount').innerText)||0;
+document.getElementById('totalCount').innerText=c+voices.length;
+}
+function renderVoices(){
+let list=document.getElementById('voiceList');
+if(!voices.length){list.innerHTML='<p style="color:#64748b;font-size:12px">No voices yet.</p>';return;}
+list.innerHTML=voices.map((v,i)=>'<div style="background:#0f172a;padding:10px;border-radius:8px;margin-bottom:6px;display:flex;justify-content:space-between"><div><b>'+(v.name||'No name')+'</b><br><span style="font-size:11px;color:#94a3b8">'+(v.text||'')+'</span></div><button onclick="deleteVoice('+i+')" style="background:#ef4444;border:none;color:white;padding:5px 9px;border-radius:6px">Del</button></div>').join('');
+}
+async function startRec(){
+let stream=await navigator.mediaDevices.getUserMedia({audio:true});
+mediaRecorder=new MediaRecorder(stream);audioChunks=[];
+mediaRecorder.ondataavailable=e=>audioChunks.push(e.data);
+mediaRecorder.onstop=async()=>{
+let blob=new Blob(audioChunks,{type:'audio/webm'});
+let voice={id:Date.now(),name:document.getElementById('speakerName').value||'No name',age:document.getElementById('speakerAge').value,gender:document.getElementById('speakerGender').value,text:document.getElementById('spokenText').value,duration:Math.round(blob.size/800),created_at:new Date().toISOString()};
+voices.unshift(voice);localStorage.setItem('mam_voices',JSON.stringify(voices));
+if(supaClient){try{await supaClient.from('voices').insert([voice]);fetchCloud();}catch(e){}}
+updateCounts();renderVoices();document.getElementById('recStatus').innerText='Saved! ✅';
+};
+mediaRecorder.start();document.getElementById('recStatus').innerText='🔴 Recording...';
+}
+function stopRec(){if(mediaRecorder&&mediaRecorder.state==='recording')mediaRecorder.stop();}
+function deleteVoice(i){voices.splice(i,1);localStorage.setItem('mam_voices',JSON.stringify(voices));updateCounts();renderVoices();}
+</script>
+</body>
+</html>
